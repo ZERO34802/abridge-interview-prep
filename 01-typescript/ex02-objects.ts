@@ -5,7 +5,8 @@ import type { Speaker, TranscriptLine } from "./types.js";
 
 /** Return only the lines spoken by `speaker`, in original order. */
 export function linesBySpeaker(lines: TranscriptLine[], speaker: Speaker): TranscriptLine[] {
-  throw new Error("TODO");
+  const res: TranscriptLine[] = lines.filter((element)=>(element.speaker === speaker));
+  return res;
 }
 
 /**
@@ -13,8 +14,18 @@ export function linesBySpeaker(lines: TranscriptLine[], speaker: Speaker): Trans
  *   -> { clinician: 12, patient: 7 }
  * Hint: you may reuse countWords from ex01.
  */
+
+function countWords(text: string): number {
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
+  return wordCount;
+}
+
 export function wordsPerSpeaker(lines: TranscriptLine[]): Record<Speaker, number> {
-  throw new Error("TODO");
+  const res = lines.reduce<Record<Speaker,number>>((mp,curr)=> {
+    mp[curr.speaker] = (mp[curr.speaker] ?? 0) + countWords(curr.text);
+    return mp;
+  },{clinician:0, patient: 0});
+  return res;
 }
 
 /**
@@ -23,5 +34,6 @@ export function wordsPerSpeaker(lines: TranscriptLine[]): Record<Speaker, number
  * and not just `TranscriptLine` (what would Java do here)?
  */
 export function findLine(lines: TranscriptLine[], id: number): TranscriptLine | undefined {
-  throw new Error("TODO");
+  const res = lines.find((element) => (element.id === id));
+  return res;
 }
