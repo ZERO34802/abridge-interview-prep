@@ -31,6 +31,19 @@ No AI autocomplete while solving. Turn Copilot/Cursor tab off for this repo.
 | 5 | `ex05-classes.ts` | classes, access modifiers, getters, implements | ☐ |
 | 6 | `ex06-async.ts` | Promise<T>, async/await, retry, timeout, parallel | ☐ |
 
+## JS fluency drills (`drills/`)
+Small "use exactly this method" problems to learn the JS standard toolbox the way you know the C++ STL.
+- Target **under 2 minutes per drill**, no Googling. Stuck for 3+ minutes? Look up only that method on MDN, then close it and write the code from memory.
+- Next morning: delete your answers (`git stash` or rewrite) and redo the ones you looked up.
+- Add every new method to the toolbox list in `NOTES.md` with a one-line example.
+
+| Day | File | Topics |
+|---|---|---|
+| 1 | `d01-strings.ts` | toUpperCase, trim, endsWith, slice, split/map/join, includes, replaceAll, repeat |
+| 1 | `d01-arrays.ts` | map, filter, reduce, spread, find, some, every, Set, sort comparator, flat, non-mutating sort |
+
+Run: `npx vitest run d01`
+
 ## Coming next
 - `02-node-express/`: Express + TypeScript API with Zod validation
 - `03-react/`: React + TypeScript (Vite `react-ts`)
