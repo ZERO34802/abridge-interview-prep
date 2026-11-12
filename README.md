@@ -41,8 +41,9 @@ Small "use exactly this method" problems to learn the JS standard toolbox the wa
 |---|---|---|
 | 1 | `d01-strings.ts` | toUpperCase, trim, endsWith, slice, split/map/join, includes, replaceAll, repeat |
 | 1 | `d01-arrays.ts` | map, filter, reduce, spread, find, some, every, Set, sort comparator, flat, non-mutating sort |
+| 2 | `d02-objects.ts` | object spread, destructuring, `?.` / `??`, Object.entries/fromEntries, Map, Set, JSON.parse/stringify |
 
-Run: `npx vitest run d01`
+Run: `npx vitest run d01` (or `d02`, ...)
 
 ## Coming next
 - `02-node-express/`: Express + TypeScript API with Zod validation
