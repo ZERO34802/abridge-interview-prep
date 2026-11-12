@@ -9,7 +9,14 @@
  *   formatTimestamp(600_999) -> "10:00"   (drop leftover milliseconds)
  */
 export function formatTimestamp(ms: number): string {
-  throw new Error("TODO");
+  let finalTimestamp = "";
+
+  let seconds = Math.floor((ms/1000));
+  let minute = Math.floor((seconds/60));
+  let rem_seconds = seconds%60;
+
+  finalTimestamp = String(minute).padStart(2,"0") + ":" + String(rem_seconds).padStart(2,"0");
+  return finalTimestamp;
 }
 
 /**
@@ -18,6 +25,11 @@ export function formatTimestamp(ms: number): string {
  *   countWords("  chest pain   since Monday ") -> 4
  *   countWords("")                             -> 0
  */
+
 export function countWords(text: string): number {
-  throw new Error("TODO");
+  let word_count = 0
+  let n = text.length;
+
+  word_count = text.split(/\s+/).filter(Boolean).length;
+  return word_count;
 }
