@@ -5,32 +5,45 @@
 
 /** "help" -> "HELP!"            Use: toUpperCase, template literal */
 export function shout(s: string): string {
-  throw new Error("TODO");
+  const upperString = s.toUpperCase();
+  return `${upperString}!`;
 }
 
 /** "  Any pain?  " -> true, "No pain" -> false      Use: trim, endsWith */
 export function isQuestion(s: string): boolean {
-  throw new Error("TODO");
+  const finalString = s.trim();
+  if(finalString.endsWith("?")) {
+    return true;
+  }else {
+    return false;
+  }
 }
 
 /** "headache" -> "Headache", "" -> ""      Use: indexing/charAt, toUpperCase, slice */
 export function capitalize(word: string): string {
-  throw new Error("TODO");
+
+  if(!word)return word;
+
+  const secondHalf = word.slice(1);
+  const firstChar = word.charAt(0).toUpperCase();
+  return firstChar + secondHalf;
 }
 
 /** "karthik panicker" -> "KP"      Use: split, map, join (and capitalize the letters) */
 export function initials(fullName: string): string {
-  throw new Error("TODO");
+  console.log("".charAt(0))
+  const res = fullName.split(/\s+/).map((word) => word.charAt(0).toUpperCase()).join("");
+  return res;
 }
 
 /** Case-insensitive search. ("Took IBUPROFEN today", "ibuprofen") -> true      Use: toLowerCase, includes */
 export function mentions(text: string, term: string): boolean {
-  throw new Error("TODO");
+  return text.toLowerCase().includes(term.toLowerCase());
 }
 
 /** Replace EVERY occurrence of `word` with "***".      Use: replaceAll */
 export function redact(text: string, word: string): string {
-  throw new Error("TODO");
+  return text.replaceAll(word,"***");
 }
 
 /**
@@ -40,10 +53,15 @@ export function redact(text: string, word: string): string {
  * Use: slice, length
  */
 export function truncate(s: string, max: number): string {
-  throw new Error("TODO");
+  if (s.length <= max) {
+    return s;
+  }else {
+    return s.slice(0,max - 3) + "...";
+  }
 }
 
 /** divider(5) -> "-----"      Use: repeat */
 export function divider(n: number): string {
-  throw new Error("TODO");
+  const s = "-".repeat(n);
+  return s;
 }
