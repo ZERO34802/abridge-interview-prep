@@ -42,6 +42,7 @@ Small "use exactly this method" problems to learn the JS standard toolbox the wa
 | 1 | `d01-strings.ts` | toUpperCase, trim, endsWith, slice, split/map/join, includes, replaceAll, repeat |
 | 1 | `d01-arrays.ts` | map, filter, reduce, spread, find, some, every, Set, sort comparator, flat, non-mutating sort |
 | 2 | `d02-objects.ts` | object spread, destructuring, `?.` / `??`, Object.entries/fromEntries, Map, Set, JSON.parse/stringify |
+| 3 | `d03-types.ts` | predict-the-compiler: `unknown`, unions, `\| undefined`, filter narrowing, async return/throw, `Record` |
 
 Run: `npx vitest run d01` (or `d02`, ...)
 
