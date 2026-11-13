@@ -2,9 +2,16 @@
 // Not always in TS videos, but this is what Node/LLM interviews actually test.
 // Run: npx vitest run ex06
 
+import { resolve } from "node:dns";
+
 /** Resolve after `ms` milliseconds. */
 export function sleep(ms: number): Promise<void> {
-  throw new Error("TODO");
+  const res:Promise<void> = new Promise((res,rej) => {
+    setTimeout(()=> {
+      res();
+    },ms);
+  });
+  return res;
 }
 
 /**
@@ -13,8 +20,13 @@ export function sleep(ms: number): Promise<void> {
  * otherwise reject with new Error("timeout").
  * Hint: Promise.race. Bonus: clear the timer so it does not keep the process alive.
  */
-export function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-  throw new Error("TODO");
+export async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  const res:Promise<T> =  Promise.race([promise, new Promise<T>((res,rej) => {
+    setTimeout(()=> {
+      rej(new Error("timeout"));
+    },ms);
+  })]);
+  return res;
 }
 
 /**
@@ -23,7 +35,23 @@ export function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
  * Interview follow-up to think about: which errors should NOT be retried?
  */
 export async function retry<T>(fn: () => Promise<T>, attempts: number, delayMs = 0): Promise<T> {
-  throw new Error("TODO");
+  let tries = 0;
+  let lastErr: unknown;
+  while(tries < attempts) {
+    try {
+      const p = await fn();
+      return p;
+    }catch (err) {
+      lastErr = err;
+      tries++;
+      if(tries < attempts) {
+        await sleep(delayMs);
+      }else {
+        throw err;
+      }
+    }
+  }
+  throw lastErr;
 }
 
 /**
@@ -32,5 +60,11 @@ export async function retry<T>(fn: () => Promise<T>, attempts: number, delayMs =
  * Question for NOTES.md: how is this different from awaiting inside a for loop?
  */
 export async function mapParallel<T, R>(items: T[], fn: (item: T) => Promise<R>): Promise<R[]> {
-  throw new Error("TODO");
+  const arr = items.map(fn);
+  try {
+    const p = await Promise.all(arr);
+    return p;
+  }catch(err) {
+    throw err;
+  }
 }
