@@ -9,7 +9,13 @@
  * Narrow with `typeof` before using string or number methods.
  */
 export function toMs(input: number | string): number {
-  throw new Error("TODO");
+  if (typeof input === "number") {
+    return input;
+  }else {
+    const minute = Number(input.slice(0,2));
+    const seconds = Number(input.slice(3,5));
+    return (minute*60*1000) + (seconds*1000);
+  }
 }
 
 // The result of one LLM call. `status` is the discriminant.
@@ -29,5 +35,16 @@ export type LlmResult =
  * Then try adding a 4th variant to LlmResult and watch the compiler complain.
  */
 export function describeResult(result: LlmResult): string {
-  throw new Error("TODO");
+  switch (result.status) {
+    case "ok":
+      return `ok (${result.tokens} tokens)`;
+    case "error":
+      return `error: ${result.message} [${result.retryable ? "retryable" : "fatal"}]`;
+    case "refused":
+      return `refused: ${result.reason}`;
+    default: {
+      const _never: never = result;
+      return _never;
+    }
+  }
 }
