@@ -19,23 +19,30 @@ export interface Backoff {
  *     attempt 1 -> base, 2 -> base*2, 3 -> base*4
  */
 export class RetryPolicy implements Backoff {
+
+  private maxAttempts: number = 0;
+  private baseDelayMs: number = 0;
+  private attempt: number = 0;
+
   constructor(maxAttempts: number, baseDelayMs: number) {
-    throw new Error("TODO");
+    this.maxAttempts = maxAttempts;
+    this.baseDelayMs = baseDelayMs;
+    this.attempt = 0;
   }
 
   recordAttempt(): void {
-    throw new Error("TODO");
+    this.attempt += 1;
   }
 
   get attempts(): number {
-    throw new Error("TODO");
+    return this.attempt;
   }
 
   canRetry(): boolean {
-    throw new Error("TODO");
+    return this.maxAttempts > this.attempt;
   }
 
   delayMs(attempt: number): number {
-    throw new Error("TODO");
+    return this.baseDelayMs * Math.pow(2,(attempt - 1));
   }
 }
