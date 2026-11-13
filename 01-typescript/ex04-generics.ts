@@ -6,7 +6,9 @@
 
 /** First element, or undefined for an empty array. Works for any T. */
 export function first<T>(items: T[]): T | undefined {
-  throw new Error("TODO");
+  if (items.length > 0) {
+    return items[0];
+  }else return undefined;
 }
 
 /**
@@ -15,7 +17,14 @@ export function first<T>(items: T[]): T | undefined {
  * Only keys that actually appear should be present.
  */
 export function groupBy<T, K extends string>(items: T[], keyFn: (item: T) => K): Partial<Record<K, T[]>> {
-  throw new Error("TODO");
+   const res = new Map<K,T[]>();
+   for (const item of items) {
+    const temp:K = keyFn(item);
+    const arr = (res.get(temp) ?? []);
+    arr.push(item);
+    res.set(temp,arr);
+   }
+   return Object.fromEntries(res) as Partial<Record<K, T[]>>;
 }
 
 /**
@@ -24,5 +33,9 @@ export function groupBy<T, K extends string>(items: T[], keyFn: (item: T) => K):
  * Hint: <T, K extends keyof T> and return T[K][]
  */
 export function pluck<T, K extends keyof T>(items: T[], key: K): T[K][] {
-  throw new Error("TODO");
+  const res: T[K][] = [];
+  items.forEach((value) => {
+    res.push(value[key]);
+  });
+  return res;
 }
