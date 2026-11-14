@@ -1,5 +1,5 @@
 import express from "express";
-import { adminAuth  } from "./middlewares/auth.js";
+import { adminAuth, userAuth  } from "./middlewares/auth.js";
 
 const app = express();
 app.use(express.json())
@@ -15,6 +15,16 @@ app.post("/admin/getAllData",(req,res,next) => {
 app.post("/admin/deleteAllData",(req,res,next) => {
     res.send("Deleting All Data");
 });
+
+//using middleware for auth for all user apis except login
+
+app.post("/user/login",(req,res)=> {
+    console.log("User is requesting login page...");
+    res.send("User is logged in");
+})
+
+// adding user auth middleware
+app.use("/user",userAuth);
 
 // playing with route handlers
 app.get("/routeHandleJumping",
