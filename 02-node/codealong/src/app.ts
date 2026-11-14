@@ -1,6 +1,20 @@
 import express from "express";
+import { adminAuth  } from "./middlewares/auth.js";
 
 const app = express();
+app.use(express.json())
+
+//using middlewares to create auth for admin api
+//use app.use() for middleware
+app.use("/admin", adminAuth);
+
+app.post("/admin/getAllData",(req,res,next) => {
+    res.send("Getting All Data");
+});
+
+app.post("/admin/deleteAllData",(req,res,next) => {
+    res.send("Deleting All Data");
+});
 
 // playing with route handlers
 app.get("/routeHandleJumping",
