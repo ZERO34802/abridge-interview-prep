@@ -46,8 +46,17 @@ Small "use exactly this method" problems to learn the JS standard toolbox the wa
 
 Run: `npx vitest run d01` (or `d02`, ...)
 
+## Node (`02-node/`)
+- `02-node/codealong/`: build the Namaste Node Season 2 project as you watch, in TypeScript. Has its own `package.json`; see its README for setup and the episode checklist.
+- `02-node/exercises/`: apply each topic without the video. Stubs + tests only.
+
+| # | File | After episodes | Topics |
+|---|---|---|---|
+| n01 | `n01-express-basics.ts` | S2 Ep 03–05 | routes, params, JSON bodies, validating `unknown` input, middleware, 404 + error handlers |
+
+Run: `npx vitest run n01`
+
 ## Coming next
-- `02-node-express/`: Express + TypeScript API with Zod validation
 - `03-react/`: React + TypeScript (Vite `react-ts`)
 - `04-llm/`: transcript → clinical note with evidence links, plus a small eval
 - `dsa/`: daily problems
