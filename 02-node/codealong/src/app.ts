@@ -1,8 +1,20 @@
 import express from "express";
+import type { ErrorRequestHandler } from "express";
 import { adminAuth, userAuth  } from "./middlewares/auth.js";
 
 const app = express();
 app.use(express.json())
+
+
+//2 routes to demonstrate error handling
+//the one throwing error is here and the one catching it and sending appropriate response
+// called wildcard error handling
+// BEST PRACTICE IS TRY CATCH!
+
+app.get("/tryErrorHandling",(req,res) => {
+    console.log("Error is now being thrown");
+    throw new Error("Error being thrown");
+});
 
 //using middlewares to create auth for admin api
 //use app.use() for middleware
@@ -79,3 +91,12 @@ app.use("/firstEndpoint",(req,res) => {
 app.listen(3000,() => {
     console.log("The server is running on 3000...");
 });
+
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+    console.log("Error being caught");
+    if(err) {
+        res.status(500).send("Unknown error, contact support");
+    }
+}
+
+app.use("/",errorHandler);
