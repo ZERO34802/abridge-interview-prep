@@ -14,32 +14,46 @@
 // Use the 3-step method: what type is X (hover), what type is expected (Y), why isn't X a Y?
 
 /* ---------- 1 ---------- */
-// export function d1(text: string) {
-//   const data: unknown = JSON.parse(text);
-//   return data.name;
-// }
-// Compiles?
-// Error:
-// Fix:
+
+function isValidData(data: unknown): data is {name:string} {
+    return (typeof data === "object" && data !== null && "name" in data && typeof data.name === "string");
+}
+
+export function d1(text: string) {
+  const data: unknown = JSON.parse(text);
+  if(isValidData(data)) {
+    return data.name;
+  }else throw new Error("invalid object format");
+}
+// Compiles? No
+// Error: data is unknown and ts doesn't allow access till its checked using typeguards 
+// Fix: typeguard to check if JSON.parse returns the right format which has data.name in it
 
 /* ---------- 2 ---------- */
-// export function d2(text: string) {
-//   const d = JSON.parse(text);
-//   const n: number = d.nmae;
-//   return n;
-// }
-// Compiles?
-// Error:
-// Fix:
+function isValid(data: unknown) : data is {nmae: number} {
+    return (typeof data === "object" && data !== null && "nmae" in data && typeof data.nmae === "number");
+}
+
+export function d2(text: string) {
+  const d:unknown = JSON.parse(text);
+  if(isValid(d)) {
+    const n: number = d.nmae;
+    return n;
+  }
+  throw new Error("Error in format");
+}
+// Compiles? yes
+// Error: don't see an error if d does have a property called nmae which is a number, if there isn't one, there will be an error
+// Fix: first just the above two and then I'll implement the fix which I think will be to use d as unknown and then implement a typeguard
 
 /* ---------- 3 ---------- */
 // type Result = { status: "ok"; tokens: number } | { status: "error"; message: string };
 // export function d3(r: Result) {
 //   return r.tokens;
 // }
-// Compiles?
-// Error:
-// Fix:
+// Compiles? No
+// Error: That's becasue the Result type consists of a union of two formats and one of them doesn't have tokens
+// Fix: again implement a typeguard to see if it's the right format, I think we can just check check if r.status === "ok" to access tokens
 
 /* ---------- 4 ---------- */
 // export function d4(p: { email?: string }) {
@@ -71,35 +85,37 @@
 // export function d7(xs: (string | undefined)[]) {
 //   return xs.filter((x) => x !== undefined).map((x) => x.toUpperCase());
 // }
-// Compiles?
-// Error:
+// Compiles? Yes
+// Error: ideally yes ? but I am just thinking about the case where it can be a "" string 
 // Fix:
 
 /* ---------- 8 ---------- */
-// export function d8() {
-//   try {
-//     JSON.parse("{");
-//   } catch (e) {
-//     return e.message;
-//   }
-//   return "";
-// }
-// Compiles?
-// Error:
+export function d8() {
+  try {
+    JSON.parse("{");
+  } catch (e) {
+    if(e instanceof Error && e !== null && e.message !== null) {
+        return e.message;
+    }
+  }
+  return "";
+}
+// Compiles? yes
+// Error: I genuinely don't see an error without un-commenting the code
 // Fix:
 
 /* ---------- 9 ---------- */
-// export async function d9(): Promise<number> {
-//   return "5";
-// }
-// Compiles?
-// Error:
+export async function d9(): Promise<number> {
+  return 5;
+}
+// Compiles? no
+// Error: "5" is a string and it should be returning number
 // Fix:
 
 /* ---------- 10 ---------- */
-// export async function d10(x: number): Promise<string> {
-//   if (x > 0) return "positive";
-// }
+export async function d10(x: number): Promise<string> {
+  if (x > 0) return "positive";
+}
 // Compiles?
 // Error:
 // Fix:
