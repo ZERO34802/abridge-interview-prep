@@ -30,7 +30,11 @@ app.post("/login",async (req,res)=> {
             if("password" in user && user.password !== null && user.password !== undefined) {
                 const passWordCheck = await bcrypt.compare(password, user?.password);
                 if(passWordCheck) {
-                    const token = await jwt.sign({_id : user._id},"testingjwt");
+                    const token = await jwt.sign({_id : user._id},"testingjwt",
+                        {
+                            expiresIn : "7d"
+                        }
+                    );
                     res.cookie("token",token);
                     res.status(200).send("Login Successful!");
                 }else {
