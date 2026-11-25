@@ -2,54 +2,69 @@ import express from "express";
 import connectDB from "./config/database.js";
 import { userModel } from "./models/user.js"
 import HttpError from "./utils/HttpError.js";
+import { UserSignUpDataValid, validateUserLoginData } from "./utils/validation.js";
 import validator from "validator";
+import bcrypt from "bcrypt";
 
 const app = express();
 app.use(express.json());
 
-interface UserSignUpData {
-    firstName : string;
-    lastName : string;
-    userId : string;
-    password : string;
-    email : string;
-    age: number;
-}
+app.post("/login",async (req,res)=> {
+    try {
+        //validate user login info - emailid and password
+        if(validateUserLoginData(req.body)) {
+            const query = {
+                email : req.body.email.trim()
+            }
+            const password = req.body.password;
+            const user = await userModel.findOne(query);
+            
+            if(!user) {
+                throw new HttpError(401, "Invalid Credentials");
+            }
 
-const ALLOWED_USER_SIGN_UP_INFO = ["firstName","lastName","email","age","userId","password"];
-
-function UserSignUpDataValid(userData:unknown): userData is UserSignUpData {
-    if(typeof userData === "object" && userData !== undefined && userData !== null) {
-        if("firstName" in userData && typeof userData.firstName === "string" && userData.firstName.trim() !== ""
-            && "lastName" in userData && typeof userData.lastName === "string" && userData.lastName.trim() !== ""
-            && "email" in userData && typeof userData.email === "string" && validator.isEmail(userData.email)
-            && "age" in userData && typeof userData.age === "number" && userData.age >= 18 && Number.isInteger(userData.age)
-            && "userId" in userData && typeof userData.userId === "string" && userData.userId.trim() !== ""
-            && "password" in userData && typeof userData.password === "string" && validator.isStrongPassword(userData.password)
-        ) {
-            let isEligible = Object.keys(userData).every((key) => {
-                return ALLOWED_USER_SIGN_UP_INFO.includes(key);
-            });
-            if(isEligible) {
-                return true;
-            }else return false;
+            if("password" in user && user.password !== null && user.password !== undefined) {
+                const passWordCheck = await bcrypt.compare(password, user?.password);
+                if(passWordCheck) {
+                    res.status(200).send("Login Successful!");
+                }else {
+                    throw new HttpError(401, "Invalid Credentials");
+                }
+            }else {
+                throw new HttpError(401, "Invalid Credentials");
+            }
+        }else {
+            throw new HttpError(401, "Invalid Credentials");
+        }
+    }catch (err){
+        if(err instanceof HttpError) {
+            res.status(err.status).send(err.message);
+        }else if(err instanceof Error) {
+            console.log(err);
+            res.status(500).send("Unknown Error, Contact Support");
+        }else {
+            console.log(err);
+            res.status(500).send("Unknown Error, Contact Support");
         }
     }
-    return false;
-}
+});
 
 app.post("/signup",async (req,res) => {
     const userData : unknown = req.body;
     console.log(userData);
     if(UserSignUpDataValid(userData)) {
         try {
+            const { password } = userData;
+            if(/\s/.test(password)) {
+                throw new HttpError(400, "Password cannot have spaces");
+            }
             const userObj = {
                 "firstName" : userData?.firstName.trim(),
                 "lastName" : userData?.lastName.trim(),
                 "email" : userData?.email.trim(),
                 "age" : userData?.age,
                 "userId" : userData?.userId.trim(),
-                "password" : userData?.password
+                "password" : await bcrypt.hash(userData?.password, 10)
             }
             const user = new userModel(userObj);
             await user.save();
