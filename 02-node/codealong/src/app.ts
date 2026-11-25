@@ -5,9 +5,13 @@ import HttpError from "./utils/HttpError.js";
 import { UserSignUpDataValid, validateUserLoginData } from "./utils/validation.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
+import { userAuth } from "./middlewares/auth.js"
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.post("/login",async (req,res)=> {
     try {
@@ -26,6 +30,8 @@ app.post("/login",async (req,res)=> {
             if("password" in user && user.password !== null && user.password !== undefined) {
                 const passWordCheck = await bcrypt.compare(password, user?.password);
                 if(passWordCheck) {
+                    const token = await jwt.sign({_id : user._id},"testingjwt");
+                    res.cookie("token",token);
                     res.status(200).send("Login Successful!");
                 }else {
                     throw new HttpError(401, "Invalid Credentials");
@@ -90,6 +96,22 @@ app.get("/user/email",async (req,res)=>{
         }
     }else {
         res.status(400).send("Please send valid email!");
+    }
+});
+
+app.get("/profile",userAuth, async (req, res)=> {
+    try {
+        const userProfile = req.user
+        if(!userProfile) {
+            throw new HttpError(401,"User Logged Out, Please login again");
+        }
+        res.status(200).send(userProfile);
+    }catch(err) {
+        if(err instanceof HttpError) {
+            res.status(err.status).send(err.message);
+        }else {
+            res.status(500).send("Unknown Error");
+        }
     }
 });
 
