@@ -1,3 +1,0 @@
-class HttpError extends Error {
-    
-}
