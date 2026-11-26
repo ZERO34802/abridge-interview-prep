@@ -47,7 +47,7 @@ Small "use exactly this method" problems to learn the JS standard toolbox the wa
 Run: `npx vitest run d01` (or `d02`, ...)
 
 ## Node (`02-node/`)
-- `02-node/codealong/`: build the Namaste Node Season 2 project as you watch, in TypeScript. Has its own `package.json`; see its README for setup and the episode checklist.
+- DevTinder code-along moved to its own repo: https://github.com/ZERO34802/DevConnect (cloned next to this folder as `DevConnect/`).
 - `02-node/exercises/`: apply each topic without the video. Stubs + tests only.
 
 | # | File | After episodes | Topics |
